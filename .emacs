@@ -30,6 +30,9 @@
 (add-hook 'nael-mode-hook (lambda () (highlight-lines-matching-regexp "^.\\{101,\\}$" 'hi-yellow)))
 (add-hook 'nael-mode-hook #'yafolding-mode)
 
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (outline-minor-mode 1)
+  (TeX-fold-mode 1)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
