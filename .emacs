@@ -49,16 +49,20 @@
     (setq-local eglot-send-changes-idle-time 9999)
     (message "eglot sync: paused")))
 
-(add-hook 'nael-mode-hook (lambda ()
+(defun my-nael-setup ()
+  ;; Disable hover provider: suppresses tactic docstrings on cursor movement.
+  ;; C-c C-n: eglot code actions (nael remaps C-c C-a to abbrev-mode).
+  ;; C-c C-p: toggle eglot sync to freeze goal state while typing mid-proof.
   (setq-local eglot-ignored-server-capabilities '(:hoverProvider))
+  (setq-local indent-tabs-mode nil)
+  (setq fill-column 125)
   (local-set-key (kbd "C-c C-n") #'eglot-code-actions)
-  (local-set-key (kbd "C-c C-p") #'my-eglot-pause-sync)))
+  (local-set-key (kbd "C-c C-p") #'my-eglot-pause-sync)
+  (abbrev-mode 1)
+  (eglot-ensure)
+  (yafolding-mode 1))
 
-(add-hook 'nael-mode-hook #'abbrev-mode)
-(add-hook 'nael-mode-hook #'eglot-ensure)
-(add-hook 'nael-mode-hook (lambda () (setq-local indent-tabs-mode nil)))
-(add-hook 'nael-mode-hook (lambda () (setq fill-column 125)))
-(add-hook 'nael-mode-hook #'yafolding-mode)
+(add-hook 'nael-mode-hook #'my-nael-setup)
 
 (add-hook 'LaTeX-mode-hook (lambda ()
   (outline-minor-mode 1)
