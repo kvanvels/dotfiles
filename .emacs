@@ -13,6 +13,16 @@
 (setq redisplay-skip-fontification-on-input t)
 (setq jit-lock-defer-time 0.1)
 
+;; Reduce GC frequency (default 800KB threshold fires constantly)
+(setq gc-cons-threshold (* 100 1024 1024))
+
+;; Disable UI elements that run expensive updates on every redisplay
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+
+;; Delay show-paren so it doesn't fire on every keystroke
+(setq show-paren-delay 0.5)
+
 ;; Keep eldoc output in the echo area; suppress the *eldoc* popup buffer.
 ;; Other options if more reduction is needed:
 ;;   (setq eldoc-echo-area-use-multiline-p 3)  ; limit to N lines
