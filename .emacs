@@ -41,9 +41,20 @@
 ;; C-c C-n triggers eglot code actions, which is how `exact?` and similar
 ;; tactics surface their suggestions as an actionable pop-up.
 ;; (nael remaps C-c C-a to abbrev-mode, so we need a different binding.)
+(defun my-eglot-pause-sync ()
+  "Toggle eglot change sync on/off."
+  (interactive)
+  (if (= eglot-send-changes-idle-time 9999)
+      (progn
+        (setq-local eglot-send-changes-idle-time 0.5)
+        (message "eglot sync: on"))
+    (setq-local eglot-send-changes-idle-time 9999)
+    (message "eglot sync: paused")))
+
 (add-hook 'nael-mode-hook (lambda ()
   (setq-local eglot-ignored-server-capabilities '(:hoverProvider))
-  (local-set-key (kbd "C-c C-n") #'eglot-code-actions)))
+  (local-set-key (kbd "C-c C-n") #'eglot-code-actions)
+  (local-set-key (kbd "C-c C-p") #'my-eglot-pause-sync)))
 
 (add-hook 'nael-mode-hook #'abbrev-mode)
 (add-hook 'nael-mode-hook #'eglot-ensure)
@@ -59,6 +70,9 @@
   "Set up three protected 80-column windows for TeX editing."
   (interactive)
   (delete-other-windows)
+  ;; Terminal frames are ignored; set-frame-width only works graphically.
+  (when (and (display-graphic-p) (< (frame-width) 250))
+    (set-frame-width (selected-frame) 250))
   (split-window-right 82)
   (other-window 1)
   (split-window-right 82)
