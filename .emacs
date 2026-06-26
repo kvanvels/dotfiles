@@ -13,6 +13,12 @@
 (setq redisplay-skip-fontification-on-input t)
 (setq jit-lock-defer-time 0.1)
 
+;; Reduce AUCTeX font-lock to level 1 (drops regex passes + texmathp scans)
+(setq font-lock-maximum-decoration '((latex-mode . 1) (t . t)))
+
+;; Stop computing shorter keybinding suggestions after every M-x
+(setq suggest-key-bindings nil)
+
 ;; Reduce GC frequency (default 800KB threshold fires constantly)
 (setq gc-cons-threshold (* 100 1024 1024))
 
