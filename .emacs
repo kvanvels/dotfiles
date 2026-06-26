@@ -7,6 +7,33 @@
 ;; Show text-area width in the mode line, e.g. "100W"
 (add-to-list 'mode-line-position '(:eval (format "  %dW" (window-body-width))) t)
 
+;; Clickable lock in mode line to toggle window dedication (protection)
+(defun my-toggle-window-dedicated ()
+  "Toggle whether the current window is dedicated (protected)."
+  (interactive)
+  (let* ((win (selected-window))
+         (dedicated (window-dedicated-p win)))
+    (set-window-dedicated-p win (if dedicated nil t))
+    (force-mode-line-update t)
+    (message "Window %s" (if dedicated "unprotected" "protected"))))
+
+(let ((map (make-sparse-keymap)))
+  (define-key map [mode-line mouse-1] #'my-toggle-window-dedicated)
+  (defvar my-mode-line-dedicated-map map))
+
+;; global-mode-string is a sub-component included in every standard mode line,
+;; so adding here reaches all buffers without fighting buffer-local overrides.
+(add-to-list 'global-mode-string
+             '(:eval (propertize
+                      (if (window-dedicated-p) " [P]" " [ ]")
+                      'face (if (window-dedicated-p)
+                                '(:weight bold)
+                              '(:foreground "#555555"))
+                      'help-echo "Click to toggle window protection"
+                      'local-map my-mode-line-dedicated-map
+                      'mouse-face 'mode-line-highlight))
+             t)
+
 ;; Skip font-lock while actively typing (Emacs 28+)
 (setq redisplay-skip-fontification-on-input t)
 (setq jit-lock-defer-time 0.1)
@@ -68,6 +95,9 @@
 (add-hook 'LaTeX-mode-hook (lambda ()
   (outline-minor-mode 1)
   (TeX-source-correlate-mode 1)))
+
+;; C-x b handles most buffer switching; use M-x ibuffer when full list needed
+(global-unset-key (kbd "C-x C-b"))
 
 (global-set-key (kbd "C-c C-<left>")  #'windmove-left)
 (global-set-key (kbd "C-c C-<right>") #'windmove-right)
