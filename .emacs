@@ -66,6 +66,11 @@
   (outline-minor-mode 1)
   (TeX-source-correlate-mode 1)))
 
+(global-set-key (kbd "C-c C-<left>")  #'windmove-left)
+(global-set-key (kbd "C-c C-<right>") #'windmove-right)
+(global-set-key (kbd "C-c C-<up>")    #'windmove-up)
+(global-set-key (kbd "C-c C-<down>")  #'windmove-down)
+
 (defun my-tex-layout ()
   "Set up three protected 80-column windows for TeX editing."
   (interactive)
