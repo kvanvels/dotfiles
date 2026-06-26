@@ -89,6 +89,24 @@
   (dolist (win (window-list))
     (set-window-parameter win 'no-delete-other-windows t)))
 
+(defun my-latex-layout ()
+  "TeX layout: speedbar | editor/claude | pdf/browser."
+  (interactive)
+  (delete-other-windows)
+  (when (and (display-graphic-p) (< (frame-width) 210))
+    (set-frame-width (selected-frame) 210)
+    (sit-for 0.2))
+  (setq sr-speedbar-right-side nil)
+  (sr-speedbar-open)
+  (let* ((editor-win  (selected-window))
+         (right-win   (split-window-right 85))
+         (claude-win  (split-window-below))
+         (_           (select-window right-win))
+         (_           (split-window-below)))
+    (select-window editor-win)
+    (dolist (win (window-list))
+      (set-window-parameter win 'no-delete-other-windows t))))
+
 ;; Load claude-code after startup so vterm and other deps are available
 (run-with-idle-timer 2 nil #'require 'claude-code)
 
