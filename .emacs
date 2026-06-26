@@ -30,8 +30,6 @@
 (setq show-paren-delay 0.5)
 
 ;; Keep eldoc output in the echo area; suppress the *eldoc* popup buffer.
-;; Other options if more reduction is needed:
-;;   (setq eldoc-echo-area-use-multiline-p 3)  ; limit to N lines
 (setq eldoc-echo-area-prefer-doc-buffer nil)
 
 ;; Disable hover provider so eglot doesn't show tactic/term docstrings
