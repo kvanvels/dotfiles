@@ -37,7 +37,6 @@
 
 (add-hook 'LaTeX-mode-hook (lambda ()
   (outline-minor-mode 1)
-  (TeX-fold-mode 1)
   (TeX-source-correlate-mode 1)))
 
 (defun my-tex-layout ()
