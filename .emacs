@@ -29,6 +29,9 @@
 ;; Delay show-paren so it doesn't fire on every keystroke
 (setq show-paren-delay 0.5)
 
+;; Flash cursor briefly when switching windows so active window is obvious
+(beacon-mode 1)
+
 ;; Keep eldoc output in the echo area; suppress the *eldoc* popup buffer.
 (setq eldoc-echo-area-prefer-doc-buffer nil)
 
