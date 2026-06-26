@@ -136,6 +136,9 @@
   (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
   (setq TeX-source-correlate-start-server t)
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+(with-eval-after-load 'pdf-view
+  (add-hook 'pdf-view-after-change-page-hook
+            #'pdf-view-set-slice-from-bounding-box))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file :no-error)
