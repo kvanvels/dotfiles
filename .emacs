@@ -87,39 +87,17 @@
   (dolist (win (window-list))
     (set-window-parameter win 'no-delete-other-windows t)))
 
-;; PDF-Tools + SyncTeX
-(pdf-tools-install)
-(setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-(setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
-(setq TeX-source-correlate-start-server t)
-(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+;; PDF-Tools + SyncTeX — defer loading until a PDF is actually opened
+(pdf-loader-install)
+(with-eval-after-load 'tex
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  (setq TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 (require 'claude-code)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(infodoc))
- '(custom-safe-themes
-   '("d2c18b27125e7319c0abaf829e282e1cd83dfa8d810302842ed665f2703d87bc"
-     "847c2471758ccf5e05baea345e2354e8ad6b4bc48a7059fa9b73d23a1f205a5d"
-     "8d9915384e65ab0bc14919983c4f17ff5b0dc1a4db28159eefd9cd76c2a8e7a8"
-     "13bd95b605d4415176da8feb6e58e077017f3d41489d2cb1aaae4db1584727ed"
-     "1c96aa7a8f3ffa83d02ea0be4a572d2f8f66e7bb440b060e7f2fb0e2081078d9"
-     "6f49b774cc8ded22c4c4b78dfe5cc6198ea0ebf21bf740f5e202c1975955ba3e"
-     default))
- '(package-selected-packages
-   '(auctex claude-code claude-code-context claude-shell
-	    color-theme-modern company-auctex fold-this git-annex
-	    indent-bars magit magit-annex nael nov org outline-indent
-	    pdf-tools pdf-view-pagemark preview-tailor sr-speedbar
-	    yafolding)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file :no-error)
+
 (put 'narrow-to-region 'disabled nil)
