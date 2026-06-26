@@ -89,6 +89,9 @@
   (dolist (win (window-list))
     (set-window-parameter win 'no-delete-other-windows t)))
 
+;; Load claude-code after startup so vterm and other deps are available
+(run-with-idle-timer 2 nil #'require 'claude-code)
+
 ;; PDF-Tools + SyncTeX — defer loading until a PDF is actually opened
 (pdf-loader-install)
 (with-eval-after-load 'tex
@@ -96,8 +99,6 @@
   (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
   (setq TeX-source-correlate-start-server t)
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-
-(require 'claude-code)
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file :no-error)
