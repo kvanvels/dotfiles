@@ -9,6 +9,10 @@
       (append mode-line-position
               '((:eval (format "  %dW" (window-body-width))))))
 
+;; Skip font-lock while actively typing (Emacs 28+)
+(setq redisplay-skip-fontification-on-input t)
+(setq jit-lock-defer-time 0.1)
+
 ;; Keep eldoc output in the echo area; suppress the *eldoc* popup buffer.
 ;; Other options if more reduction is needed:
 ;;   (setq eldoc-echo-area-use-multiline-p 3)  ; limit to N lines
