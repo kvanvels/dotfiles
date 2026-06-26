@@ -32,7 +32,26 @@
 
 (add-hook 'LaTeX-mode-hook (lambda ()
   (outline-minor-mode 1)
-  (TeX-fold-mode 1)))
+  (TeX-fold-mode 1)
+  (TeX-source-correlate-mode 1)))
+
+(defun my-tex-layout ()
+  "Set up three protected 80-column windows for TeX editing."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right 82)
+  (other-window 1)
+  (split-window-right 82)
+  (other-window -1)
+  (dolist (win (window-list))
+    (set-window-parameter win 'no-delete-other-windows t)))
+
+;; PDF-Tools + SyncTeX
+(pdf-tools-install)
+(setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+(setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+(setq TeX-source-correlate-start-server t)
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 
 (require 'claude-code)
 
@@ -54,7 +73,8 @@
    '(auctex claude-code claude-code-context claude-shell
 	    color-theme-modern company-auctex fold-this git-annex
 	    indent-bars magit magit-annex nael nov org outline-indent
-	    preview-tailor sr-speedbar yafolding)))
+	    pdf-tools pdf-view-pagemark preview-tailor sr-speedbar
+	    yafolding)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
