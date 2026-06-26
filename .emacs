@@ -2,6 +2,8 @@
 (require 'package)
 (add-to-list 'package-archives '("MELPA" . "https://melpa.org/packages/") t)
 
+(setq vc-handled-backends (delq 'Git vc-handled-backends))
+
 ;; Show text-area width in the mode line, e.g. "100W"
 (setq mode-line-position
       (append mode-line-position
