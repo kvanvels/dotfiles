@@ -27,7 +27,6 @@
 (add-hook 'nael-mode-hook #'eglot-ensure)
 (add-hook 'nael-mode-hook (lambda () (setq-local indent-tabs-mode nil)))
 (add-hook 'nael-mode-hook (lambda () (setq fill-column 125)))
-(add-hook 'nael-mode-hook (lambda () (highlight-lines-matching-regexp "^.\\{101,\\}$" 'hi-yellow)))
 (add-hook 'nael-mode-hook #'yafolding-mode)
 
 (add-hook 'LaTeX-mode-hook (lambda ()
