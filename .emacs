@@ -5,9 +5,7 @@
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
 ;; Show text-area width in the mode line, e.g. "100W"
-(setq mode-line-position
-      (append mode-line-position
-              '((:eval (format "  %dW" (window-body-width))))))
+(add-to-list 'mode-line-position '(:eval (format "  %dW" (window-body-width))) t)
 
 ;; Skip font-lock while actively typing (Emacs 28+)
 (setq redisplay-skip-fontification-on-input t)
