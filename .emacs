@@ -173,7 +173,14 @@ it without touching anything else."
              (claude-buf   (get-buffer-create claude-name)))
         (with-current-buffer claude-buf
           (unless (eq major-mode 'claude-code-vterm-mode)
-            (claude-code-vterm-mode)))
+            (claude-code-vterm-mode))
+          (setq-local mode-line-buffer-identification
+                      (list (propertize
+                             (concat "*"
+                                     (file-name-nondirectory
+                                      (directory-file-name project-root))
+                                     "*")
+                             'face 'mode-line-buffer-id))))
         (set-window-buffer claude-win claude-buf))
       ;; All six layout windows are protected: dedicated + survive C-x 1.
       (dolist (win (list editor-win pdf-col term-win claude-win wild-win))
