@@ -76,8 +76,10 @@
   (interactive)
   (delete-other-windows)
   ;; Terminal frames are ignored; set-frame-width only works graphically.
+  ;; Wayland compositor takes ~0.045s to acknowledge resize; 0.2s gives 4x margin.
   (when (and (display-graphic-p) (< (frame-width) 250))
-    (set-frame-width (selected-frame) 250))
+    (set-frame-width (selected-frame) 250)
+    (sit-for 0.2))
   (split-window-right 82)
   (other-window 1)
   (split-window-right 82)
