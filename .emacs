@@ -100,10 +100,28 @@
   (setq sr-speedbar-right-side nil)
   (sr-speedbar-open)
   (let* ((editor-win  (selected-window))
+         (pdf-file    (when buffer-file-name
+                        (concat
+                         (expand-file-name
+                          (if (and (fboundp 'TeX-master-file)
+                                   (boundp 'TeX-master)
+                                   (not (eq TeX-master t)))
+                              (TeX-master-file)
+                            (file-name-sans-extension buffer-file-name))
+                          (file-name-directory buffer-file-name))
+                         ".pdf")))
          (right-win   (split-window-right 85))
          (claude-win  (split-window-below))
          (_           (select-window right-win))
-         (_           (split-window-below)))
+         (browser-win (split-window-below)))
+    ;; PDF: open compiled output if it exists alongside the .tex file
+    (when (and pdf-file (file-exists-p pdf-file))
+      (find-file pdf-file))
+    ;; Claude Code session in the bottom-center window
+    (require 'claude-code)
+    (with-selected-window claude-win
+      (claude-code-run))
+    ;; Return focus to the editor
     (select-window editor-win)
     (dolist (win (window-list))
       (set-window-parameter win 'no-delete-other-windows t))))
