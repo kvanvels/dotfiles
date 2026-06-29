@@ -94,7 +94,9 @@
 
 (add-hook 'LaTeX-mode-hook (lambda ()
   (outline-minor-mode 1)
-  (TeX-source-correlate-mode 1)))
+  (TeX-source-correlate-mode 1)
+  (local-set-key (kbd "<tab>")     #'bicycle-cycle)
+  (local-set-key (kbd "<backtab>") #'bicycle-cycle-global)))
 
 ;; C-x b handles most buffer switching; use M-x ibuffer when full list needed
 (global-unset-key (kbd "C-x C-b"))
@@ -191,16 +193,9 @@ it without touching anything else."
 ;; Load claude-code after startup so vterm and other deps are available
 (run-with-idle-timer 2 nil #'require 'claude-code)
 
-;; PDF-Tools + SyncTeX — defer loading until a PDF is actually opened
-(pdf-loader-install)
 (with-eval-after-load 'tex
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-  (setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
   (setq TeX-source-correlate-start-server t)
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-(with-eval-after-load 'pdf-view
-  (add-hook 'pdf-view-after-change-page-hook
-            #'pdf-view-set-slice-from-bounding-box))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file :no-error)
