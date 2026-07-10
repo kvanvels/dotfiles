@@ -1,6 +1,9 @@
 ;; -*- lexical-binding: t -*-
+(add-to-list 'custom-theme-load-path "~/.emacs.d/colorthemes")
+
 (require 'package)
-(add-to-list 'package-archives '("MELPA" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
@@ -94,11 +97,34 @@
 
 (require 'claude-code)
 
+;; (setq load-path (cons "~/.emacs.d/lean4-mode" load-path))
+
+;; (setq lean4-mode-required-packages '(dash f flycheck lsp-mode magit-section s))
+
+;; (let ((need-to-refresh t))
+;;   (dolist (p lean4-mode-required-packages)
+;;     (when (not (package-installed-p p))
+;;      (when need-to-refresh
+;;         (package-refresh-contents)
+;;         (setq need-to-refresh nil))
+;;       (package-install p))))
+
+;; (require 'lean4-mode)
+
+;; (use-package nael
+;;   :ensure t
+;;   :hook (lean4-mode . nael-mode))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9"
+    "white"])
  '(custom-enabled-themes '(infodoc))
  '(custom-safe-themes
    '("d2c18b27125e7319c0abaf829e282e1cd83dfa8d810302842ed665f2703d87bc"
@@ -107,13 +133,23 @@
      "13bd95b605d4415176da8feb6e58e077017f3d41489d2cb1aaae4db1584727ed"
      "1c96aa7a8f3ffa83d02ea0be4a572d2f8f66e7bb440b060e7f2fb0e2081078d9"
      "6f49b774cc8ded22c4c4b78dfe5cc6198ea0ebf21bf740f5e202c1975955ba3e"
+     "bd28a7a54d9bfbda4456afb650a5990282b391f1e0494fb04b095981255066ae"
+     "0ea5731605469a81203311ad7b4b3db03d6d7249ce621e3f2793ae3613d165ed"
      default))
+ '(ispell-dictionary nil)
+ '(lean4-autodetect-lean3 t)
+ '(lean4-info-buffer-debounce-delay-sec 0.1)
+ '(package-archives
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
    '(auctex claude-code claude-code-context claude-shell
-	    color-theme-modern company-auctex fold-this git-annex
-	    indent-bars magit magit-annex nael nov org outline-indent
-	    pdf-tools pdf-view-pagemark preview-tailor sr-speedbar
-	    yafolding)))
+	    color-theme-modern company-auctex flycheck fold-this
+	    git-annex indent-bars lsp-mode magit magit-annex nael
+	    nael-lsp nov olivetti org outline-indent pdf-tools
+	    pdf-view-pagemark preview-tailor sr-speedbar
+	    writeroom-mode yafolding))
+ '(show-trailing-whitespace t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -121,3 +157,4 @@
  ;; If there is more than one, they won't work right.
  )
 (put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
