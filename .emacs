@@ -95,8 +95,8 @@
 (add-hook 'LaTeX-mode-hook (lambda ()
   (outline-minor-mode 1)
   (TeX-source-correlate-mode 1)
-  (local-set-key (kbd "<tab>")     #'bicycle-cycle)
-  (local-set-key (kbd "<backtab>") #'bicycle-cycle-global)))
+  (local-set-key (kbd "C-<tab>")   #'bicycle-cycle)
+  (local-set-key (kbd "C-S-<tab>") #'bicycle-cycle-global)))
 
 ;; C-x b handles most buffer switching; use M-x ibuffer when full list needed
 (global-unset-key (kbd "C-x C-b"))
