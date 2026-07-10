@@ -88,10 +88,9 @@
   (dolist (win (window-list))
     (set-window-parameter win 'no-delete-other-windows t)))
 
-;; PDF-Tools + SyncTeX
-(pdf-tools-install)
-(setq TeX-view-program-selection '((output-pdf "PDF Tools")))
-(setq TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+;; Evince + SyncTeX
+(setq TeX-view-program-selection '((output-pdf "Evince")))
+(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
 (setq TeX-source-correlate-start-server t)
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 
@@ -146,8 +145,8 @@
    '(auctex claude-code claude-code-context claude-shell
 	    color-theme-modern company-auctex flycheck fold-this
 	    git-annex indent-bars lsp-mode magit magit-annex nael
-	    nael-lsp nov olivetti org outline-indent pdf-tools
-	    pdf-view-pagemark preview-tailor sr-speedbar
+	    nael-lsp nov olivetti org outline-indent
+	    preview-tailor sr-speedbar
 	    writeroom-mode yafolding))
  '(show-trailing-whitespace t))
 (custom-set-faces
