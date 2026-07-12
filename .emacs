@@ -1,6 +1,9 @@
 ;; -*- lexical-binding: t -*-
+(add-to-list 'custom-theme-load-path "~/.emacs.d/colorthemes")
+
 (require 'package)
-(add-to-list 'package-archives '("MELPA" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
@@ -110,98 +113,10 @@
   (lambda () (interactive)
     (comment-region (region-beginning) (region-end) -1)))
 
-(defun my-tex-layout ()
-  "Set up three protected 80-column windows for TeX editing."
-  (interactive)
-  (delete-other-windows)
-  ;; Terminal frames are ignored; set-frame-width only works graphically.
-  ;; Wayland compositor takes ~0.045s to acknowledge resize; 0.2s gives 4x margin.
-  (when (and (display-graphic-p) (< (frame-width) 250))
-    (set-frame-width (selected-frame) 250)
-    (sit-for 0.2))
-  (split-window-right 82)
-  (other-window 1)
-  (split-window-right 82)
-  (other-window -1)
-  (dolist (win (window-list))
-    (set-window-parameter win 'no-delete-other-windows t)))
 
-(defun my-latex-layout ()
-  "TeX layout: speedbar | editor/claude | pdf/terminal | wild-west.
-
-Fixed windows (claude, pdf, terminal) are dedicated and survive C-x 1.
-Editor also survives C-x 1 but is not dedicated so files open there
-normally.  Wild-west column is unprotected: C-x 1 from editor closes
-it without touching anything else."
-  (interactive)
-  (delete-other-windows)
-  ;; Terminal frames are ignored; set-frame-width only works graphically.
-  ;; Wayland compositor takes ~0.045s to acknowledge resize; 0.2s gives 4x margin.
-  (when (and (display-graphic-p) (< (frame-width) 280))
-    (set-frame-width (selected-frame) 280)
-    (sit-for 0.2))
-  ;; Capture editor-win before speedbar opens; sr-speedbar-open may steal focus
-  ;; but the window object remains valid and is still the main editing window.
-  (let* ((editor-win (selected-window))
-         (pdf-file   (when buffer-file-name
-                       (concat
-                        (expand-file-name
-                         (if (and (fboundp 'TeX-master-file)
-                                  (boundp 'TeX-master)
-                                  (not (eq TeX-master t)))
-                             (TeX-master-file)
-                           (file-name-sans-extension buffer-file-name))
-                         (file-name-directory buffer-file-name))
-                        ".pdf"))))
-    (setq sr-speedbar-right-side nil)
-    (sr-speedbar-open)
-    ;; Use explicit window args so selected-window state after speedbar doesn't matter.
-    (let* ((pdf-col    (split-window-right 85 editor-win))
-           (wild-win   (split-window-right 85 pdf-col))
-           (term-win   (split-window-below nil pdf-col))
-           (claude-win (split-window-below nil editor-win)))
-      ;; PDF viewer
-      (select-window pdf-col)
-      (when (and pdf-file (file-exists-p pdf-file))
-        (find-file pdf-file))
-      ;; Terminal
-      (select-window term-win)
-      (require 'vterm)
-      (vterm "*terminal*")
-      ;; Claude Code: claude-code-run ends with switch-to-buffer-other-window
-      ;; which would steal wild-win, so replicate its setup and target claude-win.
-      (require 'claude-code)
-      (let* ((claude-name (claude-code-buffer-name))
-             (project-root (claude-code-normalize-project-root
-                            (projectile-project-root)))
-             (default-directory project-root)
-             (vterm-shell  claude-code-executable)
-             (claude-buf   (get-buffer-create claude-name)))
-        (with-current-buffer claude-buf
-          (unless (eq major-mode 'claude-code-vterm-mode)
-            (claude-code-vterm-mode))
-          (setq-local mode-line-buffer-identification
-                      (list (propertize
-                             (concat "*"
-                                     (file-name-nondirectory
-                                      (directory-file-name project-root))
-                                     "*")
-                             'face 'mode-line-buffer-id))))
-        (set-window-buffer claude-win claude-buf))
-      ;; All six layout windows are protected: dedicated + survive C-x 1.
-      (dolist (win (list editor-win pdf-col term-win claude-win wild-win))
-        (set-window-dedicated-p win t)
-        (set-window-parameter win 'no-delete-other-windows t))
-      (select-window editor-win))))
-
-;; Load claude-code after startup so vterm and other deps are available
-(run-with-idle-timer 2 nil #'require 'claude-code)
-
-(with-eval-after-load 'tex
-  (setq TeX-source-correlate-start-server t)
-  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file :no-error)
 
-(put 'narrow-to-region 'disabled nil)
+
+
