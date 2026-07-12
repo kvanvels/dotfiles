@@ -106,6 +106,10 @@
 (global-set-key (kbd "C-c C-<up>")    #'windmove-up)
 (global-set-key (kbd "C-c C-<down>")  #'windmove-down)
 
+(global-set-key (kbd "C-c u")
+  (lambda () (interactive)
+    (comment-region (region-beginning) (region-end) -1)))
+
 (defun my-tex-layout ()
   "Set up three protected 80-column windows for TeX editing."
   (interactive)
