@@ -7,6 +7,18 @@
 
 (setq vc-handled-backends (delq 'Git vc-handled-backends))
 
+;; With Git removed from `vc-handled-backends' above, `project.el' can no
+;; longer find Git project roots via `vc-responsible-backend' (it returns
+;; nil), which broke Eglot's root detection for `lake serve' (it fell back
+;; to the buffer's own directory instead of the repo root). Teach
+;; `project.el' to still find `.git' roots directly, without touching
+;; VC's Git backend/mode-line status.
+(with-eval-after-load 'project
+  (add-to-list 'project-find-functions
+               (lambda (dir)
+                 (when-let ((root (locate-dominating-file dir ".git")))
+                   (cons 'transient root)))))
+
 ;; Show text-area width in the mode line, e.g. "100W"
 (setq mode-line-position
       (append mode-line-position
